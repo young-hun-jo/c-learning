@@ -49,7 +49,5 @@ int main(void) {
             fare *= 0.75;
     }
     printf("최종 요금: %d\n", fare);
-
-    
     return 0;
 }
