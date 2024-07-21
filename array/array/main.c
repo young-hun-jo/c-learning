@@ -100,6 +100,49 @@ int main(void) {
         putchar('\n');
     }
     
+    // 필수연습문제(7)
+    int aList[5][5] = { 0 };
+    int value = 0;
     
+    for (int i = 0; i < 5; ++i) {
+        for (int j = 0; j < 5; ++j)
+            if (i % 2 == 0) {
+                aList[i][j] = ++value;
+            }
+            else {
+                aList[i][4-j] = ++value;
+            }
+    }
+    
+    for (int i = 0; i < 5; ++i) {
+        for (int j = 0; j < 5; ++j) {
+            printf("%d ", aList[i][j]);
+        }
+        putchar('\n');
+    }
+    
+     필수연습문제(8) => 다시연습
+    int aList[5][5] = { 0 };
+    int x = -1, y = 0, nDirection = 1, nCount = 0;
+    int i = 0, j = 0, nLength = 9;
+    
+    for (nLength = 9; nLength > 0; nLength -= 2) {
+        for (int k = 0; k < nLength; ++k) {
+            if (k < nLength / 2 + 1)
+                x += nDirection; // 열 증가
+            else
+                y += nDirection; // 행 증가
+            
+            aList[y][x] = ++nCount;
+        }
+        nDirection = -nDirection;
+    }
+
+    for (i = 0; i < 5; ++i)
+    {
+            for (j = 0; j < 5; ++j)
+                    printf("%d\t", aList[i][j]);
+            putchar('\n');
+    }
     return 0;
 }
