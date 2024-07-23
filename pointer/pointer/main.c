@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int main(void) {
     // (1)
@@ -42,5 +43,76 @@ int main(void) {
     
     // OS로부터 받은 메모리 반납
     free(pList);
+     
+    // (4)
+    // []로 지정해도 컴파일러가 알아서 Hello를 보고 길이 6으로 잡음
+    char szBuffer[] = { "Hello" };
+    char* pszBuffer = "Hello";
+    char* pszData = NULL;  // 포인터 변수 초기화
+    
+    // 초기화한 포인터 변수에 담겨있는 메모리 주소가 가리키는 데이터를 담기 위해 메모리 할당받음
+    // malloc()으로 6바이트 길이의 메모리를 할당 받음. malloc()이 반환하는 포인터 주소에 간접지정(*)연산을 함에 따라 char 형식이 됨 -> 1차원 배열과 100% 호환!
+    pszData = (char*)malloc(sizeof(char) * 6);
+    
+    pszData[0] = 'H';
+    pszData[1] = 'e';
+    pszData[2] = 'l';
+    pszData[3] = 'l';
+    pszData[4] = 'o';
+    pszData[5] = '\0';
+    
+    puts(szBuffer);
+    puts(pszBuffer);
+    puts(pszData);
+    // malloc()으로 할당 받은 메모리 OS에 반납
+    free(pszData);
+    
+    // (5) 메모리 초기화
+    int* pList = NULL, * pNewList = NULL;
+    int aList[3] = { 0 };
+    
+    pList = (int*)malloc(sizeof(int) * 3);
+    memset(pList, 0, sizeof(int) * 3);  // 0으로 초기화
+    
+    pNewList = (int*)calloc(3, sizeof(int)); // malloc + memset(0으로 초기화)를 한꺼번에 수행 해줌
+    
+    for (int i = 0; i < 3; ++i)
+        printf("pList[%d]: %d\n", i, pList[i]);
+    for (int i = 0; i < 3; ++i)
+        printf("pNewList[%d]: %d\n", i, pNewList[i]);
+    
+    free(pList);
+    free(pNewList);
+    
+    // (6) 메모리 값 복사(매우 중요)
+    // (6-1) memcpy(dest, src, n of byte) 함수 사용
+    char szBuffer[12] = { "HelloWorld" };
+    char szNewBuffer[12] = { 0 };
+    
+    memcpy(szNewBuffer, szBuffer, 4);
+    puts(szNewBuffer);
+    memcpy(szNewBuffer, szBuffer, 6);
+    puts(szNewBuffer);
+    memcpy(szNewBuffer, szBuffer, sizeof(szBuffer));
+    puts(szNewBuffer);
+    
+    // (6-2) memcpy() 쓰지 않고 개별요소하나씩 복사(이것이 memcpy()가 내부적으로 동작하는 방식)
+    char szBuffer[12] = { "HelloWorld" };
+    char* pszData = NULL;
+    
+    pszData = (char*)malloc(sizeof(char) * 12);
+    for (int i = 0; i < 12; ++i)
+        pszData[i] = szBuffer[i];
+    puts(pszData);
+    
+    // (6-3) 메모리 값 비교 => 반드시 전용함수를 사용해야 함
+    char szBuffer[12] = { "TestString" };
+    char* pszData = "TestString";
+    // 컴퓨터는 비교를 할 때 뺄셈을 한다!
+    // [메모리초기화,복사,비교] 강의 속 17분20초 참고
+    printf("%d\n", memcmp(szBuffer, pszData, 10));
+    printf("%d\n", memcmp("testString", pszData, 10)); // 32가 나오는데 이유는 `T의 ASCII 코드값(84) - t의 ASCII 코드값(116)` 이기 때문. 단! 기준 요소만으로만 비교함! 왜? 배열의 메모리는 기준 요소의 메모리잖아!
+    printf("%d\n", memcmp("DataString", pszData, 10)); // TestString
+    
     return  0;
 }
