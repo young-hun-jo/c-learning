@@ -152,6 +152,45 @@ int main(void) {
     printf("%c\n", *p);
     printf("%c\n",*(p+3));
     printf("%c\n", *p+2);
+    
+    //(9) 문자열 복사, 비교, 검색
+    // (9)-1 문자열 복사
+    char szBuffer[] = "Hello";
+    char* pszBuffer = szBuffer;  // 포인터 변수 pszBuffer에 szBuffer의 메모리 주소(기준 요소의 메모리 주소)를 할당. 64비트 컴퓨터에서 포인터 변수는 64비트 크기를 가짐
+    
+    char* pszHeap = malloc(sizeof(char) * 16); // 포인터 변수 pszHeap에 16바이트의 메모리를 동적할당
+    strcpy(pszHeap, pszBuffer); // pszHeap 포인터 변수에 pszBuffer 포인터 변수를 DeepCopy. pszHeap에 담겨있는 메모리 주소를 따라가면 Hello가 별도로 담겨져 있음
+    // pszHeap = pszBuffer // SwallowCopy. pszHeap은 pszBuffer에 담겨있는 메모리 주소를 따라가면 나오는 Hello 즉 원본을 가리키게 됨
+    
+    puts(pszHeap);
+    free(pszHeap);
+    
+    // (9)-2 문자열 비교
+    char szBuffer[12] = { "TestString" };  // main()함수 내 지역변수이므로 stack 메모리에 저장
+    char* pszData = "TestString";          // 문자열 상수이기 때문에 정적 영역(ex. Heap) 메모리에 저장
+    
+    // strcmp(): 문자열의 메모리를 비교하는데, memcpy() 와는 달리 비교할 사이즈를 넣어주지는 않음.
+    // 고로 strcmp()를 해주었을 때 같으면 0, 다르면 양수 또는 음수가 나옴.
+    printf("%d\n", strcmp(szBuffer, pszData));
+    printf("%d\n", strcmp("TestString", pszData));
+    printf("%d\n", strcmp("TestString2", pszData));
+    printf("%d\n", strcmp("Test", pszData));
+    
+    // (9)-3 문자열 검색
+    char szBuffer[32] = { "I am a boy." };
+    printf("%p\n", szBuffer);
+    
+    // strstr(): 문자열에서 특정 문자열을 검색하는 함수. 단, 메모리 주소를 반환하는데 기준요소로부터 검색할 문자열의 상대적 위치의 주소를 반환함(반환하는 값이 인덱스가 아닌 주소값임에 주의)
+    printf("%p\n", strstr(szBuffer, "am"));
+    printf("%p\n", strstr(szBuffer, "boy"));
+    printf("%p\n", strstr(szBuffer, "zedd")); // 만약 검색한 문자열이 존재하지 않으면 null을 반환하는데 주소를 찍어보면 0 즉, `0x0`이 뜸
+    
+    // 만약 인덱스를 반환시키고 싶다면 메모리 주소 간의 뺄셈을 이용
+    printf("Index: %d\n", strstr(szBuffer, "am") - szBuffer);
+    printf("Index: %d\n", strstr(szBuffer, "boy") - szBuffer);
+    printf("Index(not existed): %d\n", strstr(szBuffer, "zedd") - szBuffer);
 
+    
+    
     return  0;
 }
