@@ -189,7 +189,37 @@ int main(void) {
     printf("Index: %d\n", strstr(szBuffer, "am") - szBuffer);
     printf("Index: %d\n", strstr(szBuffer, "boy") - szBuffer);
     printf("Index(not existed): %d\n", strstr(szBuffer, "zedd") - szBuffer);
-
+    
+    // (10) 다중포인터 알아둘 것
+    char* astrList[3] = { "Hello", "World", "String" };
+    
+    printf("%s\n", astrList[0]);
+    printf("%s\n", astrList[1]);
+    printf("%s\n", astrList[2]);
+    
+    printf("%s\n", astrList[0] + 1); // astrList[0]은 char*로 기준요소의 메모리 주소를 담고있음. 거기다 1을 더하고 문자열로 출력하면 1번 인덱스부터 쭉 출력하라
+    printf("%s\n", astrList[1] + 2);
+    printf("%s\n", astrList[2] + 3);
+    
+    printf("%c\n", astrList[0][1]); // astrList[0]은 single 포인터임. 따라서 1차원 배열과 100%호환 되므로 1차원 배열의 특정 인덱스값 추출이 가능하
+    printf("%c\n", astrList[1][2]);
+    printf("%c\n", astrList[2][3]);
+    
+    // (11) 2차원 배열에 대한 포인터
+    char aStrList[2][12] = { 0 }; // 2행, 12열에 크기인 2차원 배열
+    
+    // `char[12]* pStrList` 형태로 정의하면 좋으나.. 문법 지원이 안됨
+    // 괄호를 이용해서 (*pStrList) 라는 것을 '포인터'라고 인지하되 해당 부분을 걷어내면 char[12]임. 따라서 12개의 사이즈를 갖는 2차원 배열의 포인터를 의미
+    char (*pStrList)[12] = aStrList;
+    // 만약 괄호 없다면 char 포인터가 12개 있는 셈을 의미함 => 주의!
+    // char *pStrList[12] = aStrList;
+    
+    // (11)-example
+    char astrList[2][12] = { "Hello", "World" };
+    char (*pStrList)[12] = astrList;
+    
+    puts(pStrList[1]); // *(pStrList + 1) 와 같은 표현. 즉, (2,12) 크기의 2차원 배열에 대한 메모리 주소인 pStrList에다가 `+1`을 함. 이 때 `+1` 이라함은 요소 1개 즉, 1바이트 문자 12개 곧 12바이트의 메모리 주소만큼 증가한다는 것! 고로 World가 나옴
+    puts(pStrList[0]); // *(pStrList + 0) 와 같은 표현. 즉, 2차원 배열의 0번 인덱스 값을 출력하라는 뜻인셈!
     
     
     return  0;
